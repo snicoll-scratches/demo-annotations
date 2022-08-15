@@ -18,7 +18,7 @@ import org.springframework.core.annotation.AliasFor;
 @RequestMapping(method = "POST")
 public @interface PostMapping {
 
-	@AliasFor(annotation = RequestMapping.class)
-	String name() default "";
+	@AliasFor(attribute = "name", annotation = RequestMapping.class)
+	String customName() default "";
 
 }

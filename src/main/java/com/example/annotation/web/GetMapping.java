@@ -18,7 +18,7 @@ import org.springframework.core.annotation.AliasFor;
 @RequestMapping(method = "GET")
 public @interface GetMapping {
 
-	@AliasFor(annotation = RequestMapping.class)
-	String name() default "";
+	@AliasFor(attribute = "name", annotation = RequestMapping.class)
+	String customName() default "";
 
 }

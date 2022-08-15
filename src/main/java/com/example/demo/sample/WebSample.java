@@ -13,7 +13,7 @@ public class WebSample {
 		return "hello";
 	}
 
-	@GetMapping(name = "something")
+	@GetMapping(customName = "something")
 	public String getWithName() {
 		return "hello";
 	}
@@ -23,7 +23,7 @@ public class WebSample {
 
 	}
 
-	@PostMapping(name = "something-else")
+	@PostMapping(customName = "something-else")
 	public void postWithName() {
 
 	}
