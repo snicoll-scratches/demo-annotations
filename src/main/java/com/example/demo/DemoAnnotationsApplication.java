@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.Set;
 
 import com.example.annotation.web.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.core.MethodIntrospector;
@@ -33,9 +35,13 @@ public class DemoAnnotationsApplication {
 	}
 
 	@Bean
-	public ApplicationRunner run(WebSample webSample) {
+	public ApplicationRunner run(ApplicationContext applicationContext) {
 		return args -> {
-			Set<Method> methods = MethodIntrospector.selectMethods(webSample.getClass(), REQUEST_MAPPING_FILTER);
+			if (args.getNonOptionArgs().size() == 0) {
+				return;
+			}
+			Class<?> beanType = applicationContext.getBean(args.getNonOptionArgs().get(0)).getClass();
+			Set<Method> methods = MethodIntrospector.selectMethods(beanType, REQUEST_MAPPING_FILTER);
 			System.out.println("Found " + methods.size() + " methods");
 			System.out.println("-----------------");
 			for (Method method : methods) {
