@@ -21,6 +21,7 @@ import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.annotation.MergedAnnotations;
+import org.springframework.core.annotation.SynthesizedAnnotation;
 import org.springframework.util.ReflectionUtils.MethodFilter;
 
 @SpringBootApplication
@@ -46,9 +47,10 @@ public class DemoAnnotationsApplication {
 			System.out.println("-----------------");
 			for (Method method : methods) {
 				System.out.println("Checking method " + method);
-				MergedAnnotation<RequestMapping> annotation = MergedAnnotations.from(method).get(RequestMapping.class);
-				System.out.println("name -> " + annotation.getValue("name"));
-				System.out.println("method -> " + annotation.getValue("method"));
+				RequestMapping annotation = MergedAnnotations.from(method).get(RequestMapping.class).synthesize();
+				System.out.println("synthesized -> " + (annotation instanceof SynthesizedAnnotation));
+				System.out.println("name -> " + annotation.name());
+				System.out.println("method -> " + annotation.method());
 				System.out.println("====");
 			}
 		};
@@ -60,6 +62,7 @@ public class DemoAnnotationsApplication {
 		public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
 			hints.reflection().registerType(WebSample.class, type ->
 					type.withMembers(MemberCategory.INTROSPECT_DECLARED_METHODS));
+			hints.proxies().registerJdkProxy(RequestMapping.class, SynthesizedAnnotation.class);
 		}
 	}
 
